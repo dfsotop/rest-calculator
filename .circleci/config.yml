@@ -1,0 +1,74 @@
+version: 2.1
+
+# references
+references:
+  working_directory: &working_directory
+                       ~/rest-calculator
+
+  mvn_cache_path: &mvn_cache_path
+                    ~/.m2
+
+  project_cache_key: &project_cache_key
+                       rest-calculator-{{ checksum "pom.xml" }}-{{ .Branch }}-v1.0
+
+  project_cache_restoring: &project_cache_restoring
+    restore_cache:
+      keys:
+        - *project_cache_key
+
+  project_cache_saving: &project_cache_saving
+    save_cache:
+      key: *project_cache_key
+      paths:
+        - *mvn_cache_path
+
+# executors
+executors:
+  deploy-machine-executor:
+    working_directory: *working_directory
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true
+
+#orbs
+orbs:
+  aws-code-deploy: circleci/aws-code-deploy@1.0.0
+
+jobs:
+  building:
+    executor: deploy-machine-executor
+    steps:
+      - checkout
+      - run:
+          name: settings-copying
+          command: cp settings.xml ~/.m2/settings.xml
+
+      - *project_cache_restoring
+      - run:
+          name: dependencies-downloading
+          command: mvn clean install -Dmaven.test.skip=true
+      - *project_cache_saving
+      - persist_to_workspace:
+          root: .
+          paths: target/*
+
+  deployment:
+    steps:
+      - *project_cache_restoring
+      - aws-code-deploy/deploy:
+          application-name: rest-calculator
+          deployment-group: myDeploymentGroup
+          service-role-arn: deploymentRoleARN
+
+workflows:
+  version: 2.1
+  building-and-deployment:
+    jobs:
+      - building
+      - deployment:
+          requires:
+            - building
+          filters:
+            branches:
+              only:
+                - master
