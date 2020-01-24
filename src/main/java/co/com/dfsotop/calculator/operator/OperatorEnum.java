@@ -2,7 +2,8 @@ package co.com.dfsotop.calculator.operator;
 
 public enum OperatorEnum {
     SUM("sum"),
-    SUBSTRACT("substract");
+    SUBTRACT("subtract"),
+    PRODUCT("product");
 
     private String operator;
 

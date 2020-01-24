@@ -9,17 +9,39 @@ import org.springframework.stereotype.Component;
 public class OperatorBuilder {
 
     private IOperator plusOperator;
+    private IOperator subtractionOperator;
+    private IOperator productOperator;
 
     public IOperator getOperator(OperatorEnum operatorEnum) {
-        if (operatorEnum.getValue().equalsIgnoreCase(OperatorEnum.SUM.getValue())) {
-            return plusOperator;
-        }else {
-            throw new IllegalArgumentException("Invalid operator (or not implemented yet)");
+        IOperator operator;
+        switch (operatorEnum) {
+            case SUM:
+                operator = plusOperator;
+                break;
+            case SUBTRACT:
+                operator = subtractionOperator;
+                break;
+            case PRODUCT:
+                operator = productOperator;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid operator (or not implemented yet)");
         }
+        return  operator;
     }
 
     @Autowired
     public void setPlusOperator(IOperator plusOperator) {
         this.plusOperator = plusOperator;
+    }
+
+    @Autowired
+    public void setSubtractionOperator(IOperator subtractionOperator) {
+        this.subtractionOperator = subtractionOperator;
+    }
+
+    @Autowired
+    public void setProductOperator(IOperator productOperator) {
+        this.productOperator = productOperator;
     }
 }

@@ -5,10 +5,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class PlusOperator implements IOperator {
-
+public class ProductOperator implements IOperator {
     @Override
     public Number operate(List<Number> operands) {
-        return operands.parallelStream().map(Number::intValue).reduce(0, Integer::sum);
+        return operands.parallelStream().map(Number::intValue).reduce(0, (a, b) -> a * b);
     }
 }
