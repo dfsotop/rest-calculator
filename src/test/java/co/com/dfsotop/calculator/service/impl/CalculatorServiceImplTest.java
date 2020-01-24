@@ -34,7 +34,7 @@ public class CalculatorServiceImplTest {
         MockitoAnnotations.initMocks(this);
         mockList = new ArrayList<>();
         mockList.add(2);
-        mockList.add(3);
+        mockList.add(3.8);
     }
 
     @Test
