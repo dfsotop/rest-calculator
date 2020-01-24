@@ -2,8 +2,11 @@ package co.com.dfsotop.calculator.service;
 
 import co.com.dfsotop.calculator.operator.OperatorEnum;
 
+import java.util.UUID;
+
 public interface ICalculatorService {
 
-    Number addOperand(Number operand);
-    Number getResult(OperatorEnum operatorEnum);
+    UUID getSessionId();
+    Number addOperand(UUID sessionId, Number operand);
+    Number getResult(UUID sessionId, OperatorEnum operatorEnum);
 }
